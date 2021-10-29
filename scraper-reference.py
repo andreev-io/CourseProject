@@ -23,30 +23,34 @@ def get_js_soup(url,driver):
 # create a webdriver object and set options for headless browsing
 options = Options()
 options.headless = True
-initial_url = 'https://docs.python.org/3.10/contents.html'
+initial_url = 'https://docs.python.org/3/contents.html'
 driver = webdriver.Chrome(executable_path=".\chromedriver", options=options)
 
-# Parse base url to college_link_url
+# Parse base url to directory_base_url
 print ('-'*10,'Parse Python base url')
-directory_base_url = 'https://docs.python.org/3.10/'
+directory_base_url = 'https://docs.python.org/3/'
 doc_url_list = []
 doc_title_list = []
 
 soup = get_js_soup(initial_url,driver)
 
-soup_area = soup.find('div',class_='toctree-wrapper compound') # Step 1: div class="toctree-wrapper compound"
+# Step 1: Collect links from the TOC
+soup_area = soup.find('div',class_='toctree-wrapper compound') # Step 1-1: div class="toctree-wrapper compound"
 # print(soup_area)
 
-for link_holder in soup_area.find_all('a', class_='reference internal'): # Step 2: Get link (class="reference internal")
+for link_holder in soup_area.find_all('a', class_='reference internal'): # Step 1-2: Get the URL link and title (class="reference internal")
     doc_link = link_holder.get('href')
     doc_title = link_holder.get_text()
     doc_url = directory_base_url + doc_link
 
+    # Step 1-3: Append parsed link to doc_url_list(URL link) and doc_title_list (Title)
     doc_url_list.append(doc_url)
     doc_title_list.append(doc_title)
 
 print ("total", len(doc_url_list), "links")
 
+
+# Step 2: Crawl text from links
 
 json_doc = []
 
@@ -55,15 +59,15 @@ for i, link in enumerate(doc_url_list):
     doc_title = doc_title_list[i]
     soup = get_js_soup(doc_url,driver)
 
-    doc_url_array = doc_url.split('#')
+    doc_url_array = doc_url.split('#') # Step 2-1: Parse anchor and page from the link
     
     print (i, "is in progress", doc_url)
     
-    if (len(doc_url_array) == 1):
-        soup_text = soup.find('div', class_='section').text
-    else:
+    if (len(doc_url_array) == 1): # Step 2-2-1: If the link does not have an anchor(length = 1)
+        soup_text = soup.find('div', class_='section').text # Crawl the entire page (class='section')
+    else: # Step 2-2-2: If the link has an anchor(length = 2)
         # print ("anchor:", doc_url_array[1])
-        soup_text = soup.find('div', id=doc_url_array[1]).text
+        soup_text = soup.find('div', id=doc_url_array[1]).text # Crawl the anchor part only (id=anchor)
     
     soup_text = soup_text.replace("\n", " ")
 
@@ -72,14 +76,17 @@ for i, link in enumerate(doc_url_list):
     doc_dictionary['text'] = soup_text
     doc_dictionary['url'] = doc_url
 
+    # Step 2-3: Append crawl data to json array
     json_doc.append(doc_dictionary)
     
 
+    # (Optional) Crawling stop counter
     '''
     if (i == 2):
         break
     '''
 
+# Step 3: Write to JSON (encoding to UTF-8, but avoid unicode escape charater by ensure_ascii=False)
 print ("writing to json")
 with open("reference_doc.json", "w", encoding = 'utf8') as json_file:
     json.dump(json_doc, json_file, indent=4, ensure_ascii=False)
