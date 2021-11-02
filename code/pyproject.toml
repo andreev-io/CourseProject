@@ -6,6 +6,9 @@ authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+StackAPI = "^0.2.0"
+beautifulsoup4 = "^4.10.0"
+ratelimit = "^2.2.1"
 
 [tool.poetry.dev-dependencies]
 
