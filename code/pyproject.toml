@@ -9,6 +9,8 @@ python = "^3.9"
 StackAPI = "^0.2.0"
 beautifulsoup4 = "^4.10.0"
 ratelimit = "^2.2.1"
+selenium = "^4.0.0"
+bs4 = "^0.0.1"
 
 [tool.poetry.dev-dependencies]
 
