@@ -18,12 +18,12 @@ testing = data[0:1000]
 training = data[1000:]
 f.close()
 
-with open("testing_entries.json", "r+") as tr:
+with open("training_entries.json", "r+") as tr:
     tr.seek(0)
     tr.write(json.dumps(training))
     tr.truncate()
 
-with open("training_entries.json", "r+") as te:
+with open("testing_entries.json", "r+") as te:
     te.seek(0)
     te.write(json.dumps(testing))
     te.truncate()
