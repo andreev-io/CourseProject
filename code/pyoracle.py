@@ -232,3 +232,5 @@ while start_date < datetime.now():
         print(f"Total number of answers for training is {total_training}\n")
 
     start_date = start_date + timedelta(days=1)
+
+# now manually zip entries.json.zip
