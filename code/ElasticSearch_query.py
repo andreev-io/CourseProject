@@ -38,7 +38,7 @@ for key in json_StackOverflow_data:
     #    break;
 
 # Step 3: ElasticSearch and compare search links with SO answer
-es = Elasticsearch()
+es = Elasticsearch('[13.82.107.120]:9200')
 
 count = 0;
 found_count = 0;
