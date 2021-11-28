@@ -1,3 +1,6 @@
+.DS_Store
+code/.DS_Store
+
 # Temporary Python files
 *.pyc
 *.egg-info
